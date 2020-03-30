@@ -1,0 +1,14 @@
+{
+  "name": "database",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "seed": "seed -u 'mongodb://127.0.0.1:<ANY_PORT_HERE>/mydb' --drop-database ./sample_seeding"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mongo-seeding-cli": "^3.4.0"
+  }
+}
