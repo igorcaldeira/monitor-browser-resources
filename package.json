@@ -1,0 +1,31 @@
+{
+  "name": "monitor-browser-resources",
+  "version": "1.0.0",
+  "description": "Gathers browser resource timing data of a front end system that has the snippet",
+  "private": true,
+  "main": "snippet.js",
+  "scripts": {
+    "build": "npx webpack --config webpack.config.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/igorcaldeira/monitor-browser-resources.git"
+  },
+  "keywords": [
+    "monitoring"
+  ],
+  "author": "Igor Caldeira",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/igorcaldeira/monitor-browser-resources/issues"
+  },
+  "homepage": "https://github.com/igorcaldeira/monitor-browser-resources#readme",
+  "devDependencies": {
+    "@babel/core": "^7.8.4",
+    "@babel/preset-env": "^7.8.4",
+    "babel-loader": "^8.0.6",
+    "webpack": "^4.41.6",
+    "webpack-cli": "^3.3.11"
+  }
+}
