@@ -1,7 +1,10 @@
 const initCollect = (endpoint, collectionFrequency) => {
   let lastEntriesCount = 0;
-  var localHeader = new Headers();
-  let basicHeader = {
+  var localHeader = new Headers({
+    "Content-Type": "application/json"
+  });
+
+  let basicConfig = {
     method: "POST",
     headers: localHeader,
     mode: "cors",
@@ -9,9 +12,10 @@ const initCollect = (endpoint, collectionFrequency) => {
   };
 
   const sendData = values => {
+    console.log({ values });
     var requestConfig = {
-      ...basicHeader,
-      body: JSON.stringify(values)
+      ...basicConfig,
+      body: JSON.stringify(values),
     };
     fetch(endpoint, requestConfig)
       .then(response => console.info(response))
@@ -38,4 +42,4 @@ const initCollect = (endpoint, collectionFrequency) => {
   runDataCollect();
 };
 
-initCollect("https://jsonplaceholder.typicode.com/posts", 1000);
+initCollect("http://localhost:3000/info", 1000);
