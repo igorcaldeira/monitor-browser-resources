@@ -3,6 +3,13 @@ var router = express.Router();
 const url = 'mongodb://localhost:27017';
 const dbName = 'resource-analytics';
 
+const groupBy = function(xs, key) {
+  return xs.reduce(function(rv, x) {
+    (rv[x[key]] = rv[x[key]] || []).push(x);
+    return rv;
+  }, {});
+};
+
 const useDatabase = fn => {
   const MongoClient = require('mongodb').MongoClient;
   const assert = require('assert');
@@ -17,8 +24,13 @@ const useDatabase = fn => {
 const insertDocs = insertionArray => {
   useDatabase((db, closeDbCallback) => {
     const collection = db.collection('fetch-data');
+    const insertionArrayEnhanced = insertionArray.map(item => ({
+      ...item,
+      dateAdded: new Date(),
+    }));
+
     collection.insertMany(
-      [ ...insertionArray ],
+      [ ...insertionArrayEnhanced ],
       function(err, result) {
         closeDbCallback();
       }
@@ -41,6 +53,22 @@ const getAllDocs = (sendDataCallback) => {
 router.post('/', function(req, res, next) {
   insertDocs(req.body);
   res.sendStatus(200);
+});
+
+router.get('/raw', function(req, res, next) {
+  getAllDocs((allDocs) => { res.send(allDocs); });
+});
+
+router.get('/group/resource', function(req, res, next) {
+  getAllDocs((allDocs) => {
+    res.send(groupBy(allDocs, 'name'));
+  });
+});
+
+router.get('/group/initType', function(req, res, next) {
+  getAllDocs((allDocs) => {
+    res.send(groupBy(allDocs, 'initiatorType'));
+  });
 });
 
 router.get('/', function(req, res, next) {
