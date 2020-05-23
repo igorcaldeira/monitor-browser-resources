@@ -20,10 +20,10 @@ const MainDashboard = () => {
     const [filter, setFilter] = useState('all');
     
     const instance = axios.create({
-        baseURL: 'http://localhost:3000',
+        baseURL: "http://3.21.156.211:3005/",
         timeout: 1000,
-        headers: {'X-Custom-Header': 'foobar'}
-      });
+        headers: { "X-Custom-Header": "foobar" },
+    });
 
     useEffect(() => {
         setLoading(true);
