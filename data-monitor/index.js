@@ -1,4 +1,5 @@
 const initCollect = (endpoint, collectionFrequency) => {
+  console.log('Gathering your data!')
   let lastEntriesCount = 0;
   var localHeader = new Headers({
     "Content-Type": "application/json"
@@ -16,6 +17,8 @@ const initCollect = (endpoint, collectionFrequency) => {
       ...basicConfig,
       body: JSON.stringify(values),
     };
+
+    console.log("Sending your data: ", endpoint);
 
     fetch(endpoint, requestConfig)
       .then(response => console.info(response))
