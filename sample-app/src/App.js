@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   Switch,
   Route,
   Link,
@@ -12,17 +12,19 @@ const octokit = new Octokit();
 
 function App() {
   const Nav = () => {
-    return <div>
-      <Link style={{ margin: '10px' }} to="/home">
-        Home
-      </Link>
-      <Link style={{ margin: '10px' }} to="/repos">
-        Repos
-      </Link>
-      <Link style={{ margin: '10px' }} to="/users">
-        Users
-      </Link>
-    </div>
+    return (
+        <div>
+            <Link style={{ margin: "10px" }} to="/home">
+                Home
+            </Link>
+            <Link style={{ margin: "10px" }} to="/repos">
+                Repos
+            </Link>
+            <Link style={{ margin: "10px" }} to="/users">
+                Users
+            </Link>
+        </div>
+    );
   }
 
   const ReposPage = () => {

@@ -26,22 +26,22 @@ const Navigation = () => {
         <NavbarBrand href="#">Resources Analytics</NavbarBrand>
         <Nav navbar>
           <NavItem>
-            <NavLink active={location.pathname === "/"} href="/">
+            <NavLink active={location.pathname === "/"} href="#/">
               Active
             </NavLink>
           </NavItem>
           <NavItem>
-            <NavLink active={location.pathname === "/raw"} href="/raw">
+            <NavLink active={location.pathname === "/raw"} href="#/raw">
               Raw
             </NavLink>
           </NavItem>
           <NavItem>
-            <NavLink active={location.pathname === "/groupResource"} href="/groupResource">
+            <NavLink active={location.pathname === "/groupResource"} href="#/groupResource">
               Group Resource
             </NavLink>
           </NavItem>
           <NavItem>
-            <NavLink active={location.pathname === "/groupType"} href="/groupType">
+            <NavLink active={location.pathname === "/groupType"} href="#/groupType">
               Group Type
             </NavLink>
           </NavItem>
