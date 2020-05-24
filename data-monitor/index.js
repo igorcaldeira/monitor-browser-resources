@@ -1,6 +1,14 @@
-const initCollect = (endpoint, collectionFrequency) => {
+function getSessionUniqueUuidv4() {
+    return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
+        (c ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))).toString(16)
+    );
+}
+
+let lastEntriesCount = 0;
+const uniqueSessionId = getSessionUniqueUuidv4()
+
+const initCollect = (endpoint, collectionFrequency, userVisitUID) => {
   console.log('Gathering your data!')
-  let lastEntriesCount = 0;
   var localHeader = new Headers({
     "Content-Type": "application/json"
   });
@@ -14,8 +22,11 @@ const initCollect = (endpoint, collectionFrequency) => {
 
   const sendData = values => {
     var requestConfig = {
-      ...basicConfig,
-      body: JSON.stringify(values),
+        ...basicConfig,
+        body: JSON.stringify({
+            collection: values,
+            userVisitUID,
+        }),
     };
 
     console.log("Sending your data: ", endpoint);
@@ -31,7 +42,9 @@ const initCollect = (endpoint, collectionFrequency) => {
     if (shouldCollectData) {
       const newResources = resourceTimingData.slice(lastEntriesCount);
       lastEntriesCount = resourceTimingData.length + 1;
-      sendData(newResources);
+      if(newResources && newResources.length){
+        sendData(newResources);
+      }
     }
   };
 
@@ -45,4 +58,7 @@ const initCollect = (endpoint, collectionFrequency) => {
   runDataCollect();
 };
 
-initCollect("http://3.21.156.211:3005/info", 1500);
+const realServer = "http://3.21.156.211:3005/info";
+const devServer = "http://localhost:3005/info";
+
+initCollect(devServer, 2000, uniqueSessionId);

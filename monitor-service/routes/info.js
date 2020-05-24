@@ -1,4 +1,5 @@
 var express = require('express');
+var geoip = require("geoip-lite");
 var router = express.Router();
 const url = 'mongodb://localhost:27017';
 const dbName = 'resource-analytics';
@@ -21,22 +22,23 @@ const useDatabase = fn => {
   });
 }
 
-const insertDocs = insertionArray => {
-  useDatabase((db, closeDbCallback) => {
-    const collection = db.collection('fetch-data');
-    const insertionArrayEnhanced = insertionArray.map(item => ({
-      ...item,
-      dateAdded: new Date(),
-    }));
+const insertDocs = ({ collection: newDocs, userVisitUID, ip, ips }) => {
+    useDatabase((db, closeDbCallback) => {
+        const collection = db.collection("fetch-data");
+        const insertionArrayEnhanced = newDocs.map((item) => ({
+            userVisitUID,
+            ip: ip || 'none',
+            ips: ips || 'none',
+            geolocation: (geoip.lookup(ip) || {}),
+            ...item,
+            dateAdded: new Date(),
+        }));
 
-    collection.insertMany(
-      [ ...insertionArrayEnhanced ],
-      function(err, result) {
-        closeDbCallback();
-      }
-    );
-  })
-}
+        collection.insertMany([...insertionArrayEnhanced], function (err, result) {
+            closeDbCallback();
+        });
+    });
+};
 
 const getAllDocs = (sendDataCallback) => {
   useDatabase((db, closeDbCallback) => {
@@ -55,7 +57,14 @@ router.post("/isalive", function (req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
-  insertDocs(req.body);
+  console.log(req.ip, req.ips);
+
+  insertDocs({
+    ...req.body,
+    ip: req.ip,
+    ips: req.ips,
+  });
+
   res.sendStatus(200);
 });
 
