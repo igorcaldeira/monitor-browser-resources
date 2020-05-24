@@ -42,4 +42,4 @@ const initCollect = (endpoint, collectionFrequency) => {
   runDataCollect();
 };
 
-initCollect("http://localhost:3000/info", 1000);
+initCollect("http://3.21.156.211:3005/info", 1500);
