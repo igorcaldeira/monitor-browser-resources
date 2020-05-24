@@ -45,12 +45,14 @@ const getTopDocs = (sendDataCallback) => {
         // Get the documents collection
         const collection = db.collection("fetch-data");
         // Insert some documents
-        collection.find({})
-          .limit(100)
-          .toArray(function (err, docs) {
-            closeDbCallback();
-            sendDataCallback(docs);
-        });
+        collection
+            .find({})
+            .sort({ _id: -1 })
+            .limit(100)
+            .toArray(function (err, docs) {
+                closeDbCallback();
+                sendDataCallback(docs);
+            });
     });
 };
 
