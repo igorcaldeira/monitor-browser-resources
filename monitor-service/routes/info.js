@@ -50,6 +50,10 @@ const getAllDocs = (sendDataCallback) => {
   })
 }
 
+router.post("/isalive", function (req, res, next) {
+    res.sendStatus(200);
+});
+
 router.post('/', function(req, res, next) {
   insertDocs(req.body);
   res.sendStatus(200);
