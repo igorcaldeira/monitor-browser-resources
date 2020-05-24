@@ -40,17 +40,31 @@ const insertDocs = ({ collection: newDocs, userVisitUID, ip, ips }) => {
     });
 };
 
-const getAllDocs = (sendDataCallback) => {
-  useDatabase((db, closeDbCallback) => {
-    // Get the documents collection
-    const collection = db.collection('fetch-data');
-    // Insert some documents
-    collection.find({}).toArray(function(err, docs) {
-      closeDbCallback();
-      sendDataCallback(docs);
+const getTopDocs = (sendDataCallback) => {
+    useDatabase((db, closeDbCallback) => {
+        // Get the documents collection
+        const collection = db.collection("fetch-data");
+        // Insert some documents
+        collection.find({})
+          .limit(100)
+          .toArray(function (err, docs) {
+            closeDbCallback();
+            sendDataCallback(docs);
+        });
     });
-  })
-}
+};
+
+const getAllDocs = (sendDataCallback) => {
+    useDatabase((db, closeDbCallback) => {
+        // Get the documents collection
+        const collection = db.collection("fetch-data");
+        // Insert some documents
+        collection.find({}).toArray(function (err, docs) {
+            closeDbCallback();
+            sendDataCallback(docs);
+        });
+    });
+};
 
 router.post("/isalive", function (req, res, next) {
     res.sendStatus(200);
@@ -69,7 +83,7 @@ router.post('/', function(req, res, next) {
 });
 
 router.get('/raw', function(req, res, next) {
-  getAllDocs((allDocs) => { res.send(allDocs); });
+  getTopDocs((allDocs) => { res.send(allDocs); });
 });
 
 router.get('/group/resource', function(req, res, next) {
