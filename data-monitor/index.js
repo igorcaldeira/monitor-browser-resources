@@ -61,4 +61,4 @@ const initCollect = (endpoint, collectionFrequency, userVisitUID) => {
 const realServer = "http://3.21.156.211:3005/info";
 const devServer = "http://localhost:3005/info";
 
-initCollect(devServer, 2000, uniqueSessionId);
+initCollect(realServer, 2000, uniqueSessionId);
