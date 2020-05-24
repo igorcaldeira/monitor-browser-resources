@@ -12,11 +12,11 @@ const initCollect = (endpoint, collectionFrequency) => {
   };
 
   const sendData = values => {
-    console.log({ values });
     var requestConfig = {
       ...basicConfig,
       body: JSON.stringify(values),
     };
+
     fetch(endpoint, requestConfig)
       .then(response => console.info(response))
       .catch(err => console.error(err));
