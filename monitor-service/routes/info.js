@@ -1,7 +1,7 @@
 var express = require("express");
 var geoip = require("geoip-lite");
 var router = express.Router();
-const url = "mongodb://3.21.156.211:27017";
+const url = "mongodb://localhost:27017";
 const dbName = "resource-analytics";
 
 const groupBy = function (xs, key) {
