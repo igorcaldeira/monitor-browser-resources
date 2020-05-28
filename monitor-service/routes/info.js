@@ -50,7 +50,7 @@ const getTopDocs = (sendDataCallback) => {
     collection
       .find({})
       .sort({ _id: -1 })
-      .limit(100)
+      .limit(1000)
       .toArray(function (err, docs) {
         closeDbCallback();
         sendDataCallback(docs);
