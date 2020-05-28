@@ -41,6 +41,9 @@ function App() {
           </Switch>
         </div>
       </Router>
+      <center>
+        <p className="footer">Resource analytics, 2020</p>
+      </center>
     </div>
   );
 }

@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Container, Row, Col, Card, CardHeader, CardBody, CardFooter, Badge, FormSelect, Progress } from "shards-react";
+import { Container, Row, Col, FormSelect } from "shards-react";
 import API from "utils/api";
+import { typeTheme } from "utils/lib";
 import Loading from "components/Core/Loading";
+import RequestCard from "components/Core/RequestCard";
+import ShowMoreList from "components/Core/ShowMoreList";
 
 const MainDashboard = () => {
   const [loading, setLoading] = useState(false);
@@ -23,24 +26,12 @@ const MainDashboard = () => {
       });
   }, []);
 
-  const typeTheme = {
-    all: undefined,
-    script: undefined,
-    img: "success",
-    xmlhttprequest: "warning",
-    css: "info",
-    fetch: "danger",
-    other: "dark",
-  };
-
   const handleChange = (e) => {
     const { value } = e.target;
     setFilter(value);
   };
 
   const showList = (data || []).filter((item) => filter === "all" || item.initiatorType === filter).splice(0, 30);
-
-  const proportionByTotal = (total, value) => (100 * value) / total;
 
   return (
     <Loading isLoading={loading}>
@@ -54,46 +45,11 @@ const MainDashboard = () => {
                     <option value={value}>{value}</option>
                   ))}
                 </FormSelect>
-                {showList.map((item) => (
-                  <Card key={item._id} className="mb-3 mt-3">
-                    <CardHeader>
-                      <Badge theme={typeTheme[item.initiatorType]}>{item.initiatorType}</Badge>&nbsp;&nbsp;
-                      <strong>{item.name}</strong>
-                    </CardHeader>
-                    <CardBody>
-                      {Object.keys(item).map((property) => (
-                        <div>
-                          <strong>{property}</strong> &nbsp;&nbsp; {JSON.stringify(item[property])}
-                        </div>
-                      ))}
-                      <br />
-                      <h5>Timeline</h5>
-                      <Progress multi>
-                        <Progress bar value={proportionByTotal(item.duration, item.redirectEnd - item.redirectStart)}>
-                          Redirect ({proportionByTotal(item.duration, item.redirectEnd - item.redirectStart)})
-                        </Progress>
-                        <Progress bar theme={"success"} value={proportionByTotal(item.duration, item.connectStart - item.fetchStart)}>
-                          fetch ({proportionByTotal(item.duration, item.connectStart - item.fetchStart)})
-                        </Progress>
-                        <Progress bar value={proportionByTotal(item.duration, item.domainLookupEnd - item.domainLookupStart)}>
-                          domainLookup ({proportionByTotal(item.duration, item.domainLookupEnd - item.domainLookupStart)})
-                        </Progress>
-                        <Progress bar theme={"success"} value={proportionByTotal(item.duration, item.connectEnd - item.connectStart)}>
-                          connect ({proportionByTotal(item.duration, item.connectEnd - item.connectStart)})
-                        </Progress>
-                        <Progress bar value={proportionByTotal(item.duration, (item.responseStart || item.responseEnd) - item.requestStart)}>
-                          request ({proportionByTotal(item.duration, (item.responseStart || item.responseEnd) - item.requestStart)})
-                        </Progress>
-                        <Progress bar theme={"success"} value={proportionByTotal(item.duration, item.responseEnd - item.responseStart)}>
-                          response ({proportionByTotal(item.duration, item.responseEnd - item.responseStart)})
-                        </Progress>
-                      </Progress>
-                    </CardBody>
-                    <CardFooter>
-                      Report created at&nbsp;&nbsp;<Badge theme="light">{new Date(item.dateAdded).toLocaleString()}</Badge>
-                    </CardFooter>
-                  </Card>
-                ))}
+                <ShowMoreList
+                  list={showList.map((r) => (
+                    <RequestCard key={r._id} request={r} />
+                  ))}
+                />
               </Col>
             </Row>
           </>

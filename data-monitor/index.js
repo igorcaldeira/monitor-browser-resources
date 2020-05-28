@@ -1,39 +1,36 @@
 function getSessionUniqueUuidv4() {
-    return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
-        (c ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))).toString(16)
-    );
+  return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
+    (c ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))).toString(16)
+  );
 }
 
 let lastEntriesCount = 0;
-const uniqueSessionId = getSessionUniqueUuidv4()
+const uniqueSessionId = getSessionUniqueUuidv4();
 
 const initCollect = (endpoint, collectionFrequency, userVisitUID) => {
-  console.log('Gathering your data!')
   var localHeader = new Headers({
-    "Content-Type": "application/json"
+    "Content-Type": "application/json",
   });
 
   let basicConfig = {
     method: "POST",
     headers: localHeader,
     mode: "cors",
-    cache: "default"
+    cache: "default",
   };
 
-  const sendData = values => {
+  const sendData = (values) => {
     var requestConfig = {
-        ...basicConfig,
-        body: JSON.stringify({
-            collection: values,
-            userVisitUID,
-        }),
+      ...basicConfig,
+      body: JSON.stringify({
+        collection: values,
+        userVisitUID,
+      }),
     };
 
-    console.log("Sending your data: ", endpoint);
-
     fetch(endpoint, requestConfig)
-      .then(response => console.info(response))
-      .catch(err => console.error(err));
+      .then((response) => console.info(response))
+      .catch((err) => console.error(err));
   };
 
   const collectData = () => {
@@ -42,7 +39,7 @@ const initCollect = (endpoint, collectionFrequency, userVisitUID) => {
     if (shouldCollectData) {
       const newResources = resourceTimingData.slice(lastEntriesCount);
       lastEntriesCount = resourceTimingData.length + 1;
-      if(newResources && newResources.length){
+      if (newResources && newResources.length) {
         sendData(newResources);
       }
     }
@@ -59,6 +56,5 @@ const initCollect = (endpoint, collectionFrequency, userVisitUID) => {
 };
 
 const realServer = "http://3.21.156.211:3005/info";
-const devServer = "http://localhost:3005/info";
 
 initCollect(realServer, 2000, uniqueSessionId);

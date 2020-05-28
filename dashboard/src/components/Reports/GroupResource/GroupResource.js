@@ -3,6 +3,7 @@ import { Container, Row, Col, Card, CardBody, ListGroup, ListGroupItem, Collapse
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import API from "utils/api";
 import Loading from "components/Core/Loading";
+import ShowMoreList from "components/Core/ShowMoreList";
 
 const groupBy = function (xs, key) {
   return xs.reduce(function (rv, x) {
@@ -95,13 +96,15 @@ const GroupResource = () => {
                     <CardBody>
                       <h4>Most called hosts</h4>
                       <ListGroup>
-                        {topHosts.map((item) => {
-                          return (
-                            <ListGroupItem>
-                              <ToggleOpt item={item} />
-                            </ListGroupItem>
-                          );
-                        })}
+                        <ShowMoreList
+                          list={topHosts.map((item) => {
+                            return (
+                              <ListGroupItem>
+                                <ToggleOpt item={item} />
+                              </ListGroupItem>
+                            );
+                          })}
+                        />
                       </ListGroup>
                       <div style={{ marginTop: "70px" }}>
                         <ResponsiveContainer height={400}>
@@ -136,14 +139,16 @@ const GroupResource = () => {
                     <CardBody>
                       <h4>Most called resources</h4>
                       <ListGroup>
-                        {topResources.map((item) => (
-                          <ListGroupItem>
-                            <Badge>{item.count}</Badge>
-                            <div style={{ display: "inline-block", paddingLeft: "10px" }}>
-                              {item.iniType} - {item.url.host}
-                            </div>
-                          </ListGroupItem>
-                        ))}
+                        <ShowMoreList
+                          list={topResources.map((item) => (
+                            <ListGroupItem>
+                              <Badge>{item.count}</Badge>
+                              <div style={{ display: "inline-block", paddingLeft: "10px" }}>
+                                {item.iniType} - {item.url.host}
+                              </div>
+                            </ListGroupItem>
+                          ))}
+                        />
                       </ListGroup>
                       <div style={{ marginTop: "70px" }}>
                         <ResponsiveContainer height={400}>

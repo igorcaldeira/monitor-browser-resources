@@ -1,0 +1,12 @@
+.show-more-link {
+  padding: 20px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all ease-in 100ms;
+}
+
+.show-more-link:hover {
+  font-size: 18px;
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 5px;
+}

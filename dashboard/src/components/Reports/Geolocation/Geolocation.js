@@ -1,28 +1,37 @@
 import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Card, CardBody } from "shards-react";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
 import API from "utils/api";
 import Loading from "components/Core/Loading";
+import RequestCard from "components/Core/RequestCard";
+import ToggleItem from "components/Core/ToggleItem";
+import ShowMoreList from "components/Core/ShowMoreList";
 
 const plotLevels = (items, level) => {
   return (
-    <div>
+    <div className="pt-4">
       {Array.isArray(items) ? (
         <div>
-          {items.map((item) => (
-            <Card>
-              <CardBody>{JSON.stringify(item)}</CardBody>
-            </Card>
-          ))}
+          <ShowMoreList
+            list={items.map((r) => (
+              <RequestCard key={r._id} request={r} />
+            ))}
+          />
         </div>
       ) : typeof items === "object" ? (
-        Object.keys(items).map((property) => (
-          <div>
-            <hr />
-            <h3 style={{ marginLeft: `${10 * level}px` }}>{property}</h3>
-            {plotLevels(items[property], level + 1)}
-          </div>
-        ))
+        Object.keys(items)
+          .sort((a, b) => a.property - b.property)
+          .map((property) => {
+            const isChildArray = Array.isArray(items[property]);
+            const isObjArray = typeof items[property] === "object";
+            const size = isChildArray ? items[property].length : isObjArray ? Object.keys(items[property]).length : "-";
+            const auxText = size === 0 ? "Empty" : size === 1 ? "One item" : `${size} subitems`;
+
+            return (
+              <ToggleItem key={`${level + 1}${property}`} title={property} badge={auxText}>
+                {plotLevels(items[property], level + 1)}
+              </ToggleItem>
+            );
+          })
       ) : (
         <hr />
       )}
@@ -62,9 +71,7 @@ const Geolocation = () => {
             <Row className="pt-3">
               <Col>
                 <Card className="mb-3 mt-3">
-                  <Row className="pt-3">
-                    <CardBody>{plotLevels(data, 0)}</CardBody>
-                  </Row>
+                  <CardBody>{plotLevels(data, 0)}</CardBody>
                 </Card>
               </Col>
             </Row>

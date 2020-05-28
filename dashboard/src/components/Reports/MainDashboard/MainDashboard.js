@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { Container, Row, Col, Card, CardTitle, CardBody } from "shards-react";
+import { Container, Row, Col, Card, CardTitle, CardBody, Badge } from "shards-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
 import API from "utils/api";
+import { formatTime, typeTheme } from "utils/lib";
 import Loading from "components/Core/Loading";
 
 const MainDashboard = () => {
@@ -47,24 +47,24 @@ const MainDashboard = () => {
               <Col>
                 <Card className="mb-3 mt-3">
                   <CardBody>
-                    <CardTitle>Request (ms)</CardTitle>
-                    {data.avgTimeDuration}
+                    <CardTitle>Request</CardTitle>
+                    {formatTime(data.avgTimeDuration)}
                   </CardBody>
                 </Card>
               </Col>
               <Col>
                 <Card className="mb-3 mt-3">
                   <CardBody>
-                    <CardTitle>Redirect (ms)</CardTitle>
-                    {data.avgTimeRedirect}
+                    <CardTitle>Redirect</CardTitle>
+                    {formatTime(data.avgTimeRedirect)}
                   </CardBody>
                 </Card>
               </Col>
               <Col>
                 <Card className="mb-3 mt-3">
                   <CardBody>
-                    <CardTitle>Response (ms)</CardTitle>
-                    {data.avgTimeResponse}
+                    <CardTitle>Response</CardTitle>
+                    {formatTime(data.avgTimeResponse)}
                   </CardBody>
                 </Card>
               </Col>
@@ -131,37 +131,40 @@ const MainDashboard = () => {
                 <h3>Overview by initiator type</h3>
               </Col>
             </Row>
-            {Object.keys(data.groupByInitiatorType).map((initiatorType) => (
-              <>
-                <h5 style={{ color: "gray" }}>{initiatorType}</h5>
-                <Row>
-                  <Col>
-                    <Card className="mb-3 mt-3">
-                      <CardBody>
-                        <CardTitle>Request (ms)</CardTitle>
-                        {data.groupByInitiatorType[initiatorType].avgTimeDuration}
-                      </CardBody>
-                    </Card>
-                  </Col>
-                  <Col>
-                    <Card className="mb-3 mt-3">
-                      <CardBody>
-                        <CardTitle>Redirect (ms)</CardTitle>
-                        {data.groupByInitiatorType[initiatorType].avgTimeRedirect}
-                      </CardBody>
-                    </Card>
-                  </Col>
-                  <Col>
-                    <Card className="mb-3 mt-3">
-                      <CardBody>
-                        <CardTitle>Response (ms)</CardTitle>
-                        {data.groupByInitiatorType[initiatorType].avgTimeResponse}
-                      </CardBody>
-                    </Card>
-                  </Col>
-                </Row>
-              </>
-            ))}
+            {Object.keys(data.groupByInitiatorType).map((initiatorType) => {
+              const local = data.groupByInitiatorType;
+              const type = initiatorType;
+              return (
+                <>
+                  <Card className="mb-3 mt-3">
+                    <CardBody>
+                      <Row>
+                        <Col>
+                          <Badge theme={typeTheme[type]}>{type}</Badge>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col>&nbsp;</Col>
+                      </Row>
+                      <Row>
+                        <Col>
+                          <h6 style={{ color: "gray" }}>Request</h6>
+                          {formatTime(local[type].avgTimeDuration)}
+                        </Col>
+                        <Col>
+                          <h6 style={{ color: "gray" }}>Redirect</h6>
+                          {formatTime(local[type].avgTimeRedirect)}
+                        </Col>
+                        <Col>
+                          <h6 style={{ color: "gray" }}>Response</h6>
+                          {formatTime(local[type].avgTimeResponse)}
+                        </Col>
+                      </Row>
+                    </CardBody>
+                  </Card>
+                </>
+              );
+            })}
           </>
         )}
       </Container>

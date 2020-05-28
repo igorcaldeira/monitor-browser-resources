@@ -38,7 +38,7 @@ const GroupType = () => {
           <>
             <Row className="pt-3">
               <Col>
-                <h3>group type</h3>
+                <h3>Group type</h3>
               </Col>
             </Row>
             <Row className="pt-3">
