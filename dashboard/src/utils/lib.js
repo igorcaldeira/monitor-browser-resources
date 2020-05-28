@@ -1,3 +1,5 @@
+import tips from "utils/propertyHelper.json";
+
 export const formatTime = (milisecondsTime) => {
   if (!milisecondsTime) return "—";
 
@@ -14,3 +16,11 @@ export const typeTheme = {
   fetch: "danger",
   other: "dark",
 };
+
+export const paramsTips = tips.reduce(
+  (prev, curr) => ({
+    ...prev,
+    [curr.name]: curr,
+  }),
+  {}
+);

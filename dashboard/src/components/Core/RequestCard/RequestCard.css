@@ -1,0 +1,6 @@
+.request-card-content .progress,
+.request-card-content .progress-bar {
+  height: 1.5rem;
+  line-height: 1.5rem;
+  font-size: 14px;
+}

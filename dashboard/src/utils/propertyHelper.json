@@ -1,0 +1,112 @@
+[
+  {
+    "name": "entryType",
+    "readonly": true,
+    "description": "Returns the type of the 'resource'."
+  },
+  {
+    "name": "name",
+    "readonly": true,
+    "description": "Returns the resources URL."
+  },
+  {
+    "name": "startTime",
+    "readonly": true,
+    "description": "Returns the timestamp for the time a resource fetch started. This value is equivalent to PerformanceEntry.fetchStart."
+  },
+  {
+    "name": "duration",
+    "readonly": true,
+    "description": "Returns a timestamp that is the difference between the responseEnd and the startTime properties."
+  },
+  {
+    "name": "initiatorType",
+    "readonly": true,
+    "description": "A string representing the type of resource that initiated the performance entry, as specified in PerformanceResourceTiming.initiatorType."
+  },
+  {
+    "name": "nextHopProtocol",
+    "readonly": true,
+    "description": "A string representing the network protocol used to fetch the resource, as identified by the ALPN Protocol ID (RFC7301)"
+  },
+  {
+    "name": "workerStart",
+    "readonly": true,
+    "description": "Returns a DOMHighResTimeStamp immediately before dispatching the FetchEvent if a Service Worker thread is already running, or immediately before starting the Service Worker thread if it is not already running. If the resource is not intercepted by a Service Worker the property will always return 0."
+  },
+  {
+    "name": "redirectStart",
+    "readonly": true,
+    "description": "A DOMHighResTimeStamp that represents the start time of the fetch which initiates the redirect."
+  },
+  {
+    "name": "redirectEnd",
+    "readonly": true,
+    "description": "A DOMHighResTimeStamp immediately after receiving the last byte of the response of the last redirect."
+  },
+  {
+    "name": "fetchStart",
+    "readonly": true,
+    "description": "A DOMHighResTimeStamp immediately before the browser starts to fetch the resource."
+  },
+  {
+    "name": "domainLookupStart",
+    "readonly": true,
+    "description": "A DOMHighResTimeStamp immediately before the browser starts the domain name lookup for the resource."
+  },
+  {
+    "name": "domainLookupEnd",
+    "readonly": true,
+    "description": "A DOMHighResTimeStamp representing the time immediately after the browser finishes the domain name lookup for the resource."
+  },
+  {
+    "name": "connectStart",
+    "readonly": true,
+    "description": "A DOMHighResTimeStamp immediately before the browser starts to establish the connection to the server to retrieve the resource."
+  },
+  {
+    "name": "connectEnd",
+    "readonly": true,
+    "description": "A DOMHighResTimeStamp immediately after the browser finishes establishing the connection to the server to retrieve the resource."
+  },
+  {
+    "name": "secureConnectionStart",
+    "readonly": true,
+    "description": "A DOMHighResTimeStamp immediately before the browser starts the handshake process to secure the current connection."
+  },
+  {
+    "name": "requestStart",
+    "readonly": true,
+    "description": "A DOMHighResTimeStamp immediately before the browser starts requesting the resource from the server."
+  },
+  {
+    "name": "responseStart",
+    "readonly": true,
+    "description": "A DOMHighResTimeStamp immediately after the browser receives the first byte of the response from the server."
+  },
+  {
+    "name": "responseEnd",
+    "readonly": true,
+    "description": "A DOMHighResTimeStamp immediately after the browser receives the last byte of the resource or immediately before the transport connection is closed, whichever comes first."
+  },
+  {
+    "name": "transferSize",
+    "readonly": true,
+    "description": "A number representing the size (in octets) of the fetched resource. The size includes the response header fields plus the response payload body."
+  },
+  {
+    "name": "encodedBodySize",
+    "readonly": true,
+    "description": "A number representing the size (in octets) received from the fetch (HTTP or cache), of the payload body, before removing any applied content-codings."
+  },
+  {
+    "name": "decodedBodySize",
+    "readonly": true,
+    "description": "A number that is the size (in octets) received from the fetch (HTTP or cache) of the message body, after removing any applied content-codings."
+  },
+  {
+    "name": "serverTiming",
+    "readonly": true,
+    "description": "An array of PerformanceServerTiming entries containing server timing metrics."
+  }
+]
