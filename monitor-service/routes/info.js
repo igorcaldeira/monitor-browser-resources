@@ -1,80 +1,124 @@
-var express = require('express');
+var express = require("express");
 var geoip = require("geoip-lite");
 var router = express.Router();
-const url = 'mongodb://localhost:27017';
-const dbName = 'resource-analytics';
+const url = "mongodb://3.21.156.211:27017";
+const dbName = "resource-analytics";
 
-const groupBy = function(xs, key) {
-  return xs.reduce(function(rv, x) {
+const groupBy = function (xs, key) {
+  return xs.reduce(function (rv, x) {
     (rv[x[key]] = rv[x[key]] || []).push(x);
     return rv;
   }, {});
 };
 
-const useDatabase = fn => {
-  const MongoClient = require('mongodb').MongoClient;
-  const assert = require('assert');
-  MongoClient.connect(url, function(err, client) {
-      assert.equal(null, err);
-      console.log("Connected successfully to server");
-      const db = client.db(dbName);
-      fn(db, () => { client.close(); })
+const useDatabase = (fn) => {
+  const MongoClient = require("mongodb").MongoClient;
+  const assert = require("assert");
+  MongoClient.connect(url, function (err, client) {
+    assert.equal(null, err);
+    console.log("Connected successfully to server");
+    const db = client.db(dbName);
+    fn(db, () => {
+      client.close();
+    });
   });
-}
+};
 
 const insertDocs = ({ collection: newDocs, userVisitUID, ip, ips }) => {
-    useDatabase((db, closeDbCallback) => {
-        const collection = db.collection("fetch-data");
-        const insertionArrayEnhanced = newDocs.map((item) => ({
-            userVisitUID,
-            ip: ip || 'none',
-            ips: ips || 'none',
-            geolocation: (geoip.lookup(ip) || {}),
-            ...item,
-            dateAdded: new Date(),
-        }));
+  useDatabase((db, closeDbCallback) => {
+    const collection = db.collection("fetch-data");
+    const insertionArrayEnhanced = newDocs.map((item) => ({
+      userVisitUID,
+      ip: ip || "none",
+      ips: ips || "none",
+      geolocation: geoip.lookup(ip) || {},
+      ...item,
+      dateAdded: new Date(),
+    }));
 
-        collection.insertMany([...insertionArrayEnhanced], function (err, result) {
-            closeDbCallback();
-        });
+    collection.insertMany([...insertionArrayEnhanced], function (err, result) {
+      closeDbCallback();
     });
+  });
 };
 
 const getTopDocs = (sendDataCallback) => {
-    useDatabase((db, closeDbCallback) => {
-        // Get the documents collection
-        const collection = db.collection("fetch-data");
-        // Insert some documents
-        collection
-            .find({})
-            .sort({ _id: -1 })
-            .limit(100)
-            .toArray(function (err, docs) {
-                closeDbCallback();
-                sendDataCallback(docs);
-            });
-    });
+  useDatabase((db, closeDbCallback) => {
+    // Get the documents collection
+    const collection = db.collection("fetch-data");
+    // Insert some documents
+    collection
+      .find({})
+      .sort({ _id: -1 })
+      .limit(100)
+      .toArray(function (err, docs) {
+        closeDbCallback();
+        sendDataCallback(docs);
+      });
+  });
 };
 
 const getAllDocs = (sendDataCallback) => {
-    useDatabase((db, closeDbCallback) => {
-        // Get the documents collection
-        const collection = db.collection("fetch-data");
-        // Insert some documents
-        collection.find({}).toArray(function (err, docs) {
-            closeDbCallback();
-            sendDataCallback(docs);
-        });
+  useDatabase((db, closeDbCallback) => {
+    // Get the documents collection
+    const collection = db.collection("fetch-data");
+    // Insert some documents
+    collection.find({}).toArray(function (err, docs) {
+      closeDbCallback();
+      sendDataCallback(docs);
     });
+  });
+};
+
+const getGeolocationInfo = (sendDataCallback) => {
+  useDatabase((db, closeDbCallback) => {
+    const collection = db.collection("fetch-data");
+
+    collection.find({}).toArray(function (err, docs) {
+      closeDbCallback();
+
+      const organizedObject = {
+        "No geolocation": [],
+      };
+
+      docs.forEach((item) => {
+        if (item) {
+          const localItem = { ...item };
+
+          const hasGeolocation = item.geolocation && Object.keys(item.geolocation).length > 0 && item.geolocation.country && item.geolocation.city;
+
+          if (!hasGeolocation) {
+            organizedObject["No geolocation"].push(localItem);
+          } else {
+            const { country, region, city } = item.geolocation;
+
+            if (!organizedObject[country]) {
+              organizedObject[country] = {};
+            }
+
+            if (!organizedObject[country][region]) {
+              organizedObject[country][region] = {};
+            }
+
+            if (!organizedObject[country][region][city]) {
+              organizedObject[country][region][city] = [];
+            }
+
+            organizedObject[country][region][city].push(localItem);
+          }
+        }
+      });
+
+      sendDataCallback(organizedObject);
+    });
+  });
 };
 
 router.post("/isalive", function (req, res, next) {
-    res.sendStatus(200);
+  res.sendStatus(200);
 });
 
-router.post('/', function(req, res, next) {
-  console.log(req.ip, req.ips);
-
+router.post("/", function (req, res, next) {
   insertDocs({
     ...req.body,
     ip: req.ip,
@@ -84,23 +128,43 @@ router.post('/', function(req, res, next) {
   res.sendStatus(200);
 });
 
-router.get('/raw', function(req, res, next) {
-  getTopDocs((allDocs) => { res.send(allDocs); });
-});
-
-router.get('/group/resource', function(req, res, next) {
-  getAllDocs((allDocs) => {
-    res.send(groupBy(allDocs, 'name'));
+router.get("/raw", function (req, res, next) {
+  getTopDocs((allDocs) => {
+    res.send(allDocs);
   });
 });
 
-router.get('/group/initType', function(req, res, next) {
+router.get("/group/resource", function (req, res, next) {
   getAllDocs((allDocs) => {
-    res.send(groupBy(allDocs, 'initiatorType'));
+    res.send(groupBy(allDocs, "name"));
   });
 });
 
-router.get('/', function(req, res, next) {
+router.get("/group/initType", function (req, res, next) {
+  getAllDocs((allDocs) => {
+    res.send(groupBy(allDocs, "initiatorType"));
+  });
+});
+
+router.get("/group/ip", function (req, res, next) {
+  getAllDocs((allDocs) => {
+    res.send(groupBy(allDocs, "ip"));
+  });
+});
+
+router.get("/group/session", function (req, res, next) {
+  getAllDocs((allDocs) => {
+    res.send(groupBy(allDocs, "userVisitUID"));
+  });
+});
+
+router.get("/group/geolocation", function (req, res, next) {
+  getGeolocationInfo((organizedDocs) => {
+    res.send(organizedDocs);
+  }, req.query);
+});
+
+router.get("/", function (req, res, next) {
   getAllDocs((allDocs) => {
     let fullDuration = 0;
     let fullRedirectDuration = 0;
@@ -108,21 +172,21 @@ router.get('/', function(req, res, next) {
     const groupByInitiatorType = {};
     const auxGroupByInitiatorType = {};
 
-    allDocs.forEach(elem => {
+    allDocs.forEach((elem) => {
       fullDuration += elem.duration;
       fullRedirectDuration += elem.redirectEnd - elem.redirectStart;
       fullResponseDuration += elem.responseEnd - elem.responseStart;
 
-      if(!auxGroupByInitiatorType[elem.initiatorType]){
-        groupByInitiatorType[elem.initiatorType] = {}
+      if (!auxGroupByInitiatorType[elem.initiatorType]) {
+        groupByInitiatorType[elem.initiatorType] = {};
         auxGroupByInitiatorType[elem.initiatorType] = {
           count: 0,
           fullDuration: 0,
           fullRedirectDuration: 0,
           fullResponseDuration: 0,
-        }
+        };
       }
-      
+
       auxGroupByInitiatorType[elem.initiatorType].count += 1;
       auxGroupByInitiatorType[elem.initiatorType].fullDuration += elem.duration;
       auxGroupByInitiatorType[elem.initiatorType].fullRedirectDuration += elem.redirectEnd - elem.redirectStart;
@@ -133,12 +197,12 @@ router.get('/', function(req, res, next) {
     const avgTimeRedirect = fullRedirectDuration / allDocs.length;
     const avgTimeResponse = fullResponseDuration / allDocs.length;
 
-    Object.keys(auxGroupByInitiatorType).forEach(initiatorType => {
+    Object.keys(auxGroupByInitiatorType).forEach((initiatorType) => {
       const initiatorTypeCount = auxGroupByInitiatorType[initiatorType].count;
       groupByInitiatorType[initiatorType].avgTimeDuration = auxGroupByInitiatorType[initiatorType].fullDuration / initiatorTypeCount;
       groupByInitiatorType[initiatorType].avgTimeRedirect = auxGroupByInitiatorType[initiatorType].fullRedirectDuration / initiatorTypeCount;
       groupByInitiatorType[initiatorType].avgTimeResponse = auxGroupByInitiatorType[initiatorType].fullResponseDuration / initiatorTypeCount;
-    })
+    });
 
     res.send({
       avgTimeDuration,
