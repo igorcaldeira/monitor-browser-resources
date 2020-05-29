@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Card, CardTitle, CardBody, Badge } from "shards-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
 import API from "utils/api";
-import { formatTime, typeTheme } from "utils/lib";
+import { typeTheme, formatDuration, formatBytes } from "utils/lib";
 import Loading from "components/Core/Loading";
 import ShowMoreList from "components/Core/ShowMoreList";
 import "./MainDashboard.css";
@@ -50,7 +50,7 @@ const MainDashboard = () => {
                 <Card className="mb-3 mt-3">
                   <CardBody>
                     <CardTitle>Avg. Duration</CardTitle>
-                    <span className="result-resume">{formatTime(data.avgTimeDuration)}</span>
+                    <span className="result-resume">{formatDuration(data.avgTimeDuration, true)}</span>
                   </CardBody>
                 </Card>
               </Col>
@@ -58,7 +58,7 @@ const MainDashboard = () => {
                 <Card className="mb-3 mt-3">
                   <CardBody>
                     <CardTitle>Avg. Transfer Size</CardTitle>
-                    <span className="result-resume">{data.avgTransferSize} B</span>
+                    <span className="result-resume">{formatBytes(data.avgTransferSize)}</span>
                   </CardBody>
                 </Card>
               </Col>
@@ -66,7 +66,7 @@ const MainDashboard = () => {
                 <Card className="mb-3 mt-3">
                   <CardBody>
                     <CardTitle>Avg. Response</CardTitle>
-                    <span className="result-resume">{formatTime(data.avgTimeResponse)}</span>
+                    <span className="result-resume">{formatDuration(data.avgTimeResponse)}</span>
                   </CardBody>
                 </Card>
               </Col>
@@ -177,15 +177,15 @@ const MainDashboard = () => {
                         <Row>
                           <Col>
                             <h6 style={{ color: "gray" }}>Request</h6>
-                            {formatTime(local[type].avgTimeDuration)}
+                            {formatDuration(local[type].avgTimeDuration, true)}
                           </Col>
                           <Col>
                             <h6 style={{ color: "gray" }}>Transfer size</h6>
-                            {formatTime(local[type].avgTransferSize)}
+                            {formatDuration(local[type].avgTransferSize, true)}
                           </Col>
                           <Col>
                             <h6 style={{ color: "gray" }}>Response</h6>
-                            {formatTime(local[type].avgTimeResponse)}
+                            {formatDuration(local[type].avgTimeResponse, true)}
                           </Col>
                         </Row>
                       </CardBody>
