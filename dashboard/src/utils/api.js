@@ -2,7 +2,7 @@ import axios from "axios";
 
 const API = axios.create({
   baseURL: process.env.REACT_APP_BACKEND_URL,
-  timeout: 60000,
+  timeout: 3 * 60 * 1000,
   validateStatus: function (status) {
     return status < 400;
   },

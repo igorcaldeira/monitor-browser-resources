@@ -11,12 +11,21 @@ const groupBy = function (xs, key) {
   }, {});
 };
 
+const removeMainContent = (item) => ({
+  _id: item.id,
+  userVisitUID: item.userVisitUID,
+  ip: item.ip,
+  name: item.name,
+  dateAdded: item.name,
+  entryType: item.entryType,
+  initiatorType: item.initiatorType,
+});
+
 const useDatabase = (fn) => {
   const MongoClient = require("mongodb").MongoClient;
   const assert = require("assert");
   MongoClient.connect(url, function (err, client) {
     assert.equal(null, err);
-    console.log("Connected successfully to server");
     const db = client.db(dbName);
     fn(db, () => {
       client.close();
@@ -65,8 +74,25 @@ const getAllDocs = (sendDataCallback) => {
     // Insert some documents
     collection.find({}).toArray(function (err, docs) {
       closeDbCallback();
-      sendDataCallback(docs);
+      sendDataCallback(docs.map(removeMainContent));
     });
+  });
+};
+
+const getUnique = (sendDataCallback, query) => {
+  useDatabase((db, closeDbCallback) => {
+    const collection = db.collection("fetch-data");
+    var ObjectID = require("mongodb").ObjectID;
+    var o_id = new ObjectID(query.id);
+    collection.findOne(
+      {
+        _id: o_id,
+      },
+      (err, d) => {
+        closeDbCallback();
+        sendDataCallback(d);
+      }
+    );
   });
 };
 
@@ -161,6 +187,12 @@ router.get("/group/session", function (req, res, next) {
 router.get("/group/geolocation", function (req, res, next) {
   getGeolocationInfo((organizedDocs) => {
     res.send(organizedDocs);
+  }, req.query);
+});
+
+router.get("/unique", function (req, res, next) {
+  getUnique((uniqueDoc) => {
+    res.send(uniqueDoc);
   }, req.query);
 });
 
