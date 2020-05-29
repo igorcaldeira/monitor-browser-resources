@@ -40,14 +40,14 @@ const MainDashboard = () => {
           <>
             <Row className="pt-3">
               <Col>
-                <h3>Average time</h3>
+                <h3>Resume</h3>
               </Col>
             </Row>
             <Row>
               <Col>
                 <Card className="mb-3 mt-3">
                   <CardBody>
-                    <CardTitle>Request</CardTitle>
+                    <CardTitle>Avg. Duration</CardTitle>
                     {formatTime(data.avgTimeDuration)}
                   </CardBody>
                 </Card>
@@ -55,16 +55,42 @@ const MainDashboard = () => {
               <Col>
                 <Card className="mb-3 mt-3">
                   <CardBody>
-                    <CardTitle>Redirect</CardTitle>
-                    {formatTime(data.avgTimeRedirect)}
+                    <CardTitle>Avg. Transfer Size</CardTitle>
+                    {formatTime(data.avgTransferSize)}
                   </CardBody>
                 </Card>
               </Col>
               <Col>
                 <Card className="mb-3 mt-3">
                   <CardBody>
-                    <CardTitle>Response</CardTitle>
+                    <CardTitle>Avg. Response</CardTitle>
                     {formatTime(data.avgTimeResponse)}
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Card className="mb-3 mt-3">
+                  <CardBody>
+                    <CardTitle>Resources used</CardTitle>
+                    {formatTime(data.count)}
+                  </CardBody>
+                </Card>
+              </Col>
+              <Col>
+                <Card className="mb-3 mt-3">
+                  <CardBody>
+                    <CardTitle>Cached used</CardTitle>
+                    {formatTime(data.fullChacedCount)}
+                  </CardBody>
+                </Card>
+              </Col>
+              <Col>
+                <Card className="mb-3 mt-3">
+                  <CardBody>
+                    <CardTitle>Most used type</CardTitle>
+                    {formatTime(data.biggestInitiator.value)}
                   </CardBody>
                 </Card>
               </Col>
@@ -152,8 +178,8 @@ const MainDashboard = () => {
                           {formatTime(local[type].avgTimeDuration)}
                         </Col>
                         <Col>
-                          <h6 style={{ color: "gray" }}>Redirect</h6>
-                          {formatTime(local[type].avgTimeRedirect)}
+                          <h6 style={{ color: "gray" }}>Transfer size</h6>
+                          {formatTime(local[type].avgTransferSize)}
                         </Col>
                         <Col>
                           <h6 style={{ color: "gray" }}>Response</h6>

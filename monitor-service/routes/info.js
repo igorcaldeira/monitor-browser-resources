@@ -211,15 +211,19 @@ router.get("/unique", function (req, res, next) {
 router.get("/", function (req, res, next) {
   getAllOriginalDocs((allDocs) => {
     let fullDuration = 0;
+    let fullChacedCount = 0;
     let fullRedirectDuration = 0;
     let fullResponseDuration = 0;
+    let fullTransferSize = 0;
     const groupByInitiatorType = {};
     const auxGroupByInitiatorType = {};
 
     allDocs.forEach((elem) => {
       fullDuration += elem.duration;
+      fullChacedCount += elem.transferSize == 0 ? 1 : 0;
+      fullTransferSize += elem.transferSize;
       fullRedirectDuration += elem.redirectEnd - elem.redirectStart;
-      fullResponseDuration += elem.responseEnd - elem.responseStart;
+      fullTransferSize += elem.responseEnd - elem.responseStart;
 
       if (!auxGroupByInitiatorType[elem.initiatorType]) {
         groupByInitiatorType[elem.initiatorType] = {};
@@ -228,6 +232,7 @@ router.get("/", function (req, res, next) {
           fullDuration: 0,
           fullRedirectDuration: 0,
           fullResponseDuration: 0,
+          fullTransferSize: 0,
         };
       }
 
@@ -235,24 +240,40 @@ router.get("/", function (req, res, next) {
       auxGroupByInitiatorType[elem.initiatorType].fullDuration += elem.duration;
       auxGroupByInitiatorType[elem.initiatorType].fullRedirectDuration += elem.redirectEnd - elem.redirectStart;
       auxGroupByInitiatorType[elem.initiatorType].fullResponseDuration += elem.responseEnd - elem.responseStart;
+      auxGroupByInitiatorType[elem.initiatorType].fullTransferSize += elem.transferSize;
     });
 
     const avgTimeDuration = fullDuration / allDocs.length;
     const avgTimeRedirect = fullRedirectDuration / allDocs.length;
     const avgTimeResponse = fullResponseDuration / allDocs.length;
+    const avgTransferSize = fullTransferSize / allDocs.length;
+
+    let biggestInitiator = { name: "-", value: 0 };
 
     Object.keys(auxGroupByInitiatorType).forEach((initiatorType) => {
       const initiatorTypeCount = auxGroupByInitiatorType[initiatorType].count;
+
+      if (biggestInitiator.value < initiatorTypeCount) {
+        biggestInitiator = { name: initiatorType, value: initiatorTypeCount };
+      }
+
       groupByInitiatorType[initiatorType].avgTimeDuration = auxGroupByInitiatorType[initiatorType].fullDuration / initiatorTypeCount;
       groupByInitiatorType[initiatorType].avgTimeRedirect = auxGroupByInitiatorType[initiatorType].fullRedirectDuration / initiatorTypeCount;
       groupByInitiatorType[initiatorType].avgTimeResponse = auxGroupByInitiatorType[initiatorType].fullResponseDuration / initiatorTypeCount;
+      groupByInitiatorType[initiatorType].avgTransferSize = auxGroupByInitiatorType[initiatorType].fullTransferSize / initiatorTypeCount;
     });
 
+    auxGroupByInitiatorType;
+
     res.send({
+      count: allDocs.length,
+      fullChacedCount,
       avgTimeDuration,
       avgTimeRedirect,
       avgTimeResponse,
+      avgTransferSize,
       groupByInitiatorType,
+      biggestInitiator,
     });
   });
 });
