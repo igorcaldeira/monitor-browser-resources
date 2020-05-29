@@ -221,7 +221,7 @@ router.get("/", function (req, res, next) {
     allDocs.forEach((elem) => {
       fullDuration += elem.duration;
       fullChacedCount += elem.transferSize == 0 ? 1 : 0;
-      fullTransferSize += elem.transferSize;
+      fullTransferSize += elem.transferSize || 0;
       fullRedirectDuration += elem.redirectEnd - elem.redirectStart;
       fullResponseDuration += elem.responseEnd - elem.responseStart;
 
@@ -240,7 +240,7 @@ router.get("/", function (req, res, next) {
       auxGroupByInitiatorType[elem.initiatorType].fullDuration += elem.duration;
       auxGroupByInitiatorType[elem.initiatorType].fullRedirectDuration += elem.redirectEnd - elem.redirectStart;
       auxGroupByInitiatorType[elem.initiatorType].fullResponseDuration += elem.responseEnd - elem.responseStart;
-      auxGroupByInitiatorType[elem.initiatorType].fullTransferSize += elem.transferSize;
+      auxGroupByInitiatorType[elem.initiatorType].fullTransferSize += elem.transferSize || 0;
     });
 
     const avgTimeDuration = fullDuration / allDocs.length;
