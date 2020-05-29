@@ -67,7 +67,19 @@ const getTopDocs = (sendDataCallback) => {
   });
 };
 
-const getAllDocs = (sendDataCallback) => {
+const getAllOriginalDocs = (sendDataCallback) => {
+  useDatabase((db, closeDbCallback) => {
+    // Get the documents collection
+    const collection = db.collection("fetch-data");
+    // Insert some documents
+    collection.find({}).toArray(function (err, docs) {
+      closeDbCallback();
+      sendDataCallback(docs);
+    });
+  });
+};
+
+const getResumedAllDocs = (sendDataCallback) => {
   useDatabase((db, closeDbCallback) => {
     // Get the documents collection
     const collection = db.collection("fetch-data");
@@ -161,25 +173,25 @@ router.get("/raw", function (req, res, next) {
 });
 
 router.get("/group/resource", function (req, res, next) {
-  getAllDocs((allDocs) => {
+  getResumedAllDocs((allDocs) => {
     res.send(groupBy(allDocs, "name"));
   });
 });
 
 router.get("/group/initType", function (req, res, next) {
-  getAllDocs((allDocs) => {
+  getResumedAllDocs((allDocs) => {
     res.send(groupBy(allDocs, "initiatorType"));
   });
 });
 
 router.get("/group/ip", function (req, res, next) {
-  getAllDocs((allDocs) => {
+  getResumedAllDocs((allDocs) => {
     res.send(groupBy(allDocs, "ip"));
   });
 });
 
 router.get("/group/session", function (req, res, next) {
-  getAllDocs((allDocs) => {
+  getResumedAllDocs((allDocs) => {
     res.send(groupBy(allDocs, "userVisitUID"));
   });
 });
@@ -197,7 +209,7 @@ router.get("/unique", function (req, res, next) {
 });
 
 router.get("/", function (req, res, next) {
-  getAllDocs((allDocs) => {
+  getAllOriginalDocs((allDocs) => {
     let fullDuration = 0;
     let fullRedirectDuration = 0;
     let fullResponseDuration = 0;
