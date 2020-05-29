@@ -42,7 +42,7 @@ const MainDashboard = () => {
           <>
             <Row className="pt-3">
               <Col>
-                <h3>Resume</h3>
+                <h3>Dashboard</h3>
               </Col>
             </Row>
             <Row>

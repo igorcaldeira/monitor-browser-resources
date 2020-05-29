@@ -7,12 +7,12 @@ const Navigation = () => {
 
   const options = [
     { slug: "", name: "Home" },
-    { slug: "raw", name: "Raw" },
     { slug: "groupResource", name: "Group Resource" },
     { slug: "groupType", name: "Group Type" },
     { slug: "geolocation", name: "Geolocation" },
     { slug: "ip", name: "IP" },
     { slug: "session", name: "Session" },
+    { slug: "raw", name: "Basic" },
   ];
 
   return (
