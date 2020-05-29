@@ -4,6 +4,8 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "rec
 import API from "utils/api";
 import { formatTime, typeTheme } from "utils/lib";
 import Loading from "components/Core/Loading";
+import ShowMoreList from "components/Core/ShowMoreList";
+import "./MainDashboard.css";
 
 const MainDashboard = () => {
   const [loading, setLoading] = useState(false);
@@ -48,7 +50,7 @@ const MainDashboard = () => {
                 <Card className="mb-3 mt-3">
                   <CardBody>
                     <CardTitle>Avg. Duration</CardTitle>
-                    {formatTime(data.avgTimeDuration)}
+                    <span className="result-resume">{formatTime(data.avgTimeDuration)}</span>
                   </CardBody>
                 </Card>
               </Col>
@@ -56,7 +58,7 @@ const MainDashboard = () => {
                 <Card className="mb-3 mt-3">
                   <CardBody>
                     <CardTitle>Avg. Transfer Size</CardTitle>
-                    {data.avgTransferSize}
+                    <span className="result-resume">{data.avgTransferSize} B</span>
                   </CardBody>
                 </Card>
               </Col>
@@ -64,7 +66,7 @@ const MainDashboard = () => {
                 <Card className="mb-3 mt-3">
                   <CardBody>
                     <CardTitle>Avg. Response</CardTitle>
-                    {formatTime(data.avgTimeResponse)}
+                    <span className="result-resume">{formatTime(data.avgTimeResponse)}</span>
                   </CardBody>
                 </Card>
               </Col>
@@ -74,7 +76,7 @@ const MainDashboard = () => {
                 <Card className="mb-3 mt-3">
                   <CardBody>
                     <CardTitle>Resources used</CardTitle>
-                    {data.count}
+                    <span className="result-resume">{data.count} times</span>
                   </CardBody>
                 </Card>
               </Col>
@@ -82,7 +84,7 @@ const MainDashboard = () => {
                 <Card className="mb-3 mt-3">
                   <CardBody>
                     <CardTitle>Cached used</CardTitle>
-                    {data.fullChacedCount}
+                    <span className="result-resume">{data.fullChacedCount} times</span>
                   </CardBody>
                 </Card>
               </Col>
@@ -90,7 +92,7 @@ const MainDashboard = () => {
                 <Card className="mb-3 mt-3">
                   <CardBody>
                     <CardTitle>Most used type</CardTitle>
-                    {String(data.biggestInitiator.name).toUpperCase()}
+                    <span className="result-resume">{String(data.biggestInitiator.name).toUpperCase()}</span>
                   </CardBody>
                 </Card>
               </Col>
@@ -103,52 +105,50 @@ const MainDashboard = () => {
             <Row className="pt-3">
               <Col>
                 <Card className="mb-3 mt-3">
-                  <Row className="pt-3">
-                    <CardBody>
-                      <Row className="pt-3">
-                        <Col>
-                          <BarChart
-                            width={500}
-                            height={300}
-                            data={chartFormat}
-                            margin={{
-                              top: 5,
-                              right: 30,
-                              left: 20,
-                              bottom: 5,
-                            }}
-                          >
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="iniType" />
-                            <YAxis />
-                            <Tooltip />
-                            <Legend />
-                            <Bar dataKey="avgTimeDuration" fill="#17C671" />
-                          </BarChart>
-                        </Col>
-                        <Col>
-                          <BarChart
-                            width={500}
-                            height={300}
-                            data={chartFormat}
-                            margin={{
-                              top: 5,
-                              right: 30,
-                              left: 20,
-                              bottom: 5,
-                            }}
-                          >
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="iniType" />
-                            <YAxis />
-                            <Tooltip />
-                            <Legend />
-                            <Bar dataKey="avgTimeResponse" fill="#FFB400" />
-                          </BarChart>
-                        </Col>
-                      </Row>
-                    </CardBody>
-                  </Row>
+                  <CardBody>
+                    <Row className="pt-3">
+                      <Col>
+                        <BarChart
+                          width={500}
+                          height={300}
+                          data={chartFormat}
+                          margin={{
+                            top: 5,
+                            right: 30,
+                            left: 20,
+                            bottom: 5,
+                          }}
+                        >
+                          <CartesianGrid strokeDasharray="3 3" />
+                          <XAxis dataKey="iniType" />
+                          <YAxis />
+                          <Tooltip />
+                          <Legend />
+                          <Bar dataKey="avgTimeDuration" fill="#17C671" />
+                        </BarChart>
+                      </Col>
+                      <Col>
+                        <BarChart
+                          width={500}
+                          height={300}
+                          data={chartFormat}
+                          margin={{
+                            top: 5,
+                            right: 30,
+                            left: 20,
+                            bottom: 5,
+                          }}
+                        >
+                          <CartesianGrid strokeDasharray="3 3" />
+                          <XAxis dataKey="iniType" />
+                          <YAxis />
+                          <Tooltip />
+                          <Legend />
+                          <Bar dataKey="avgTimeResponse" fill="#FFB400" />
+                        </BarChart>
+                      </Col>
+                    </Row>
+                  </CardBody>
                 </Card>
               </Col>
             </Row>
@@ -157,40 +157,43 @@ const MainDashboard = () => {
                 <h3>Overview by initiator type</h3>
               </Col>
             </Row>
-            {Object.keys(data.groupByInitiatorType).map((initiatorType) => {
-              const local = data.groupByInitiatorType;
-              const type = initiatorType;
-              return (
-                <>
-                  <Card className="mb-3 mt-3">
-                    <CardBody>
-                      <Row>
-                        <Col>
-                          <Badge theme={typeTheme[type]}>{type}</Badge>
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col>&nbsp;</Col>
-                      </Row>
-                      <Row>
-                        <Col>
-                          <h6 style={{ color: "gray" }}>Request</h6>
-                          {formatTime(local[type].avgTimeDuration)}
-                        </Col>
-                        <Col>
-                          <h6 style={{ color: "gray" }}>Transfer size</h6>
-                          {formatTime(local[type].avgTransferSize)}
-                        </Col>
-                        <Col>
-                          <h6 style={{ color: "gray" }}>Response</h6>
-                          {formatTime(local[type].avgTimeResponse)}
-                        </Col>
-                      </Row>
-                    </CardBody>
-                  </Card>
-                </>
-              );
-            })}
+            <ShowMoreList
+              count={3}
+              list={Object.keys(data.groupByInitiatorType).map((initiatorType) => {
+                const local = data.groupByInitiatorType;
+                const type = initiatorType;
+                return (
+                  <>
+                    <Card className="mb-3 mt-3">
+                      <CardBody>
+                        <Row>
+                          <Col>
+                            <Badge theme={typeTheme[type]}>{type}</Badge>
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col>&nbsp;</Col>
+                        </Row>
+                        <Row>
+                          <Col>
+                            <h6 style={{ color: "gray" }}>Request</h6>
+                            {formatTime(local[type].avgTimeDuration)}
+                          </Col>
+                          <Col>
+                            <h6 style={{ color: "gray" }}>Transfer size</h6>
+                            {formatTime(local[type].avgTransferSize)}
+                          </Col>
+                          <Col>
+                            <h6 style={{ color: "gray" }}>Response</h6>
+                            {formatTime(local[type].avgTimeResponse)}
+                          </Col>
+                        </Row>
+                      </CardBody>
+                    </Card>
+                  </>
+                );
+              })}
+            />
           </>
         )}
       </Container>
