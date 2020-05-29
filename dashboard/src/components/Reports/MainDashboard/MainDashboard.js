@@ -56,7 +56,7 @@ const MainDashboard = () => {
                 <Card className="mb-3 mt-3">
                   <CardBody>
                     <CardTitle>Avg. Transfer Size</CardTitle>
-                    {formatTime(data.avgTransferSize)}
+                    {data.avgTransferSize}
                   </CardBody>
                 </Card>
               </Col>
@@ -74,7 +74,7 @@ const MainDashboard = () => {
                 <Card className="mb-3 mt-3">
                   <CardBody>
                     <CardTitle>Resources used</CardTitle>
-                    {formatTime(data.count)}
+                    {data.count}
                   </CardBody>
                 </Card>
               </Col>
@@ -82,7 +82,7 @@ const MainDashboard = () => {
                 <Card className="mb-3 mt-3">
                   <CardBody>
                     <CardTitle>Cached used</CardTitle>
-                    {formatTime(data.fullChacedCount)}
+                    {data.fullChacedCount}
                   </CardBody>
                 </Card>
               </Col>
@@ -90,7 +90,7 @@ const MainDashboard = () => {
                 <Card className="mb-3 mt-3">
                   <CardBody>
                     <CardTitle>Most used type</CardTitle>
-                    {formatTime(data.biggestInitiator.value)}
+                    {String(data.biggestInitiator.name).toUpperCase()}
                   </CardBody>
                 </Card>
               </Col>

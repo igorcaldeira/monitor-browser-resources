@@ -223,7 +223,7 @@ router.get("/", function (req, res, next) {
       fullChacedCount += elem.transferSize == 0 ? 1 : 0;
       fullTransferSize += elem.transferSize;
       fullRedirectDuration += elem.redirectEnd - elem.redirectStart;
-      fullTransferSize += elem.responseEnd - elem.responseStart;
+      fullResponseDuration += elem.responseEnd - elem.responseStart;
 
       if (!auxGroupByInitiatorType[elem.initiatorType]) {
         groupByInitiatorType[elem.initiatorType] = {};
