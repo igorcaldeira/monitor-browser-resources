@@ -1,0 +1,12 @@
+.button-group {
+  height: 90px;
+  width: 100%;
+}
+
+.options-wrapper {
+  float: right;
+}
+
+.options-wrapper button {
+  margin-left: 20px;
+}

@@ -8,6 +8,7 @@ import GroupType from "components/Reports/GroupType";
 import Ip from "components/Reports/Ip";
 import Session from "components/Reports/Session";
 import Geolocation from "components/Reports/Geolocation";
+import Comparative from "components/Reports/Comparative";
 import "./App.css";
 
 function App() {
@@ -29,11 +30,14 @@ function App() {
             <Route path="/ip">
               <Ip />
             </Route>
-            <Route path="/Session">
+            <Route path="/session">
               <Session />
             </Route>
-            <Route path="/Geolocation">
+            <Route path="/geolocation">
               <Geolocation />
+            </Route>
+            <Route path="/comparative">
+              <Comparative />
             </Route>
             <Route path="/">
               <MainDashboard />

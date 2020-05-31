@@ -4,3 +4,24 @@
   line-height: 1.5rem;
   font-size: 14px;
 }
+
+.property-wrapper {
+  padding: 5px 20px;
+  background-color: rgba(236, 236, 236, 0.3);
+}
+.property-wrapper:nth-child(2n) {
+  background-color: white;
+}
+
+.property-name {
+  font-weight: bold;
+  display: inline-block;
+  width: 180px;
+  vertical-align: top;
+}
+
+.property-content {
+  display: inline-block;
+  margin-left: 10px;
+  width: calc(100% - 220px);
+}

@@ -121,7 +121,7 @@ const MainDashboard = () => {
                         >
                           <CartesianGrid strokeDasharray="3 3" />
                           <XAxis dataKey="iniType" />
-                          <YAxis />
+                          <YAxis scale="sqrt" domain={["auto", "auto"]} />
                           <Tooltip />
                           <Legend />
                           <Bar dataKey="avgTimeDuration" fill="#17C671" />
@@ -141,7 +141,7 @@ const MainDashboard = () => {
                         >
                           <CartesianGrid strokeDasharray="3 3" />
                           <XAxis dataKey="iniType" />
-                          <YAxis />
+                          <YAxis scale="sqrt" domain={["auto", "auto"]} />
                           <Tooltip />
                           <Legend />
                           <Bar dataKey="avgTimeResponse" fill="#FFB400" />

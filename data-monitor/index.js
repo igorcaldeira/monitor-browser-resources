@@ -1,11 +1,9 @@
-function getSessionUniqueUuidv4() {
-  return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
-    (c ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))).toString(16)
-  );
-}
-
 let lastEntriesCount = 0;
-const uniqueSessionId = getSessionUniqueUuidv4();
+const collectTimeInterval = 3 * 1000;
+const port = 3005;
+const host = "3.21.156.211";
+const protocol = "http";
+const monitorHost = `${protocol}://${HOST}:${port}/info`;
 
 const initCollect = (endpoint, collectionFrequency, userVisitUID) => {
   var localHeader = new Headers({
@@ -55,6 +53,12 @@ const initCollect = (endpoint, collectionFrequency, userVisitUID) => {
   runDataCollect();
 };
 
-const realServer = "http://3.21.156.211:3005/info";
+function getSessionUniqueUuidv4() {
+  return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
+    (c ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))).toString(16)
+  );
+}
 
-initCollect(realServer, 2000, uniqueSessionId);
+const uniqueSessionId = getSessionUniqueUuidv4();
+
+initCollect(monitorHost, collectTimeInterval, uniqueSessionId);

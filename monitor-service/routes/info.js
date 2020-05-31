@@ -108,6 +108,45 @@ const getUnique = (sendDataCallback, query) => {
   });
 };
 
+const getFiltered = (sendCallback, filter) => {
+  useDatabase((db, closeDbCallback) => {
+    const collection = db.collection("fetch-data");
+    collection.createIndex({ "$**": "text" });
+
+    var queryFilter = {};
+
+    Object.keys(filter).forEach((filterProperty) => {
+      const isDateStart = filterProperty === "dateStart";
+      const isDateEnd = filterProperty === "dateEnd";
+      const isName = filterProperty === "name";
+
+      if (!isDateStart && !isDateEnd && !isName) {
+        queryFilter[filterProperty] = filter[filterProperty];
+      } else if (isName) {
+        queryFilter.$text = { $search: filter[filterProperty] };
+      } else if (isDateStart) {
+        if (!queryFilter.dateAdded) {
+          queryFilter.dateAdded = {};
+        }
+        queryFilter.dateAdded.$gte = new Date(filter[filterProperty]);
+      } else if (isDateEnd) {
+        if (!queryFilter.dateAdded) {
+          queryFilter.dateAdded = {};
+        }
+        queryFilter.dateAdded.$lte = new Date(filter[filterProperty]);
+      }
+    });
+
+    console.log(queryFilter);
+
+    collection.find(queryFilter).toArray(function (err, docs) {
+      closeDbCallback();
+      // console.log(docs);
+      sendCallback(docs);
+    });
+  });
+};
+
 const getGeolocationInfo = (sendDataCallback) => {
   useDatabase((db, closeDbCallback) => {
     const collection = db.collection("fetch-data");
@@ -206,6 +245,12 @@ router.get("/unique", function (req, res, next) {
   getUnique((uniqueDoc) => {
     res.send(uniqueDoc);
   }, req.query);
+});
+
+router.post("/filtered", function (req, res, next) {
+  getFiltered((filteredResults) => {
+    res.send(filteredResults);
+  }, req.body);
 });
 
 router.get("/", function (req, res, next) {

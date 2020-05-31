@@ -22,11 +22,13 @@ const RequestCard = ({ request: r }) => {
         <strong>{r.name}</strong>
       </CardHeader>
       <CardBody>
-        {Object.keys(r).map((property) => (
-          <div title={(paramsTips[property] || { description: "" }).description}>
-            <strong>{property}</strong> &nbsp;&nbsp; {JSON.stringify(r[property])}
-          </div>
-        ))}
+        {Object.keys(r).map((property) =>
+          r[property] !== 0 ? (
+            <div className="property-wrapper" title={(paramsTips[property] || { description: "" }).description}>
+              <span className="property-name">{property}</span> <span className="property-content">{JSON.stringify(r[property])}</span>
+            </div>
+          ) : null
+        )}
         <br />
         <h5>Timeline</h5>
         <Progress multi>
