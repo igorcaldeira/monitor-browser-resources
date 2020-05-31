@@ -181,7 +181,7 @@ const MainDashboard = () => {
                           </Col>
                           <Col>
                             <h6 style={{ color: "gray" }}>Transfer size</h6>
-                            {formatDuration(local[type].avgTransferSize, true)}
+                            {formatBytes(local[type].avgTransferSize)}
                           </Col>
                           <Col>
                             <h6 style={{ color: "gray" }}>Response</h6>
