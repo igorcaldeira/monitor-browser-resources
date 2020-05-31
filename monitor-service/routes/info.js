@@ -78,7 +78,7 @@ const getAnalytics = (localDocItems) => {
   auxGroupByInitiatorType;
 
   return {
-    count: allDocs.length,
+    count: localDocItems.length,
     fullChacedCount,
     avgTimeDuration,
     avgTimeRedirect,
