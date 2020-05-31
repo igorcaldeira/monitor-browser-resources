@@ -55,10 +55,10 @@ const getAnalytics = (localDocItems) => {
     auxGroupByInitiatorType[elem.initiatorType].fullTransferSize += elem.transferSize || 0;
   });
 
-  const avgTimeDuration = fullDuration / allDocs.length;
-  const avgTimeRedirect = fullRedirectDuration / allDocs.length;
-  const avgTimeResponse = fullResponseDuration / allDocs.length;
-  const avgTransferSize = fullTransferSize / allDocs.length;
+  const avgTimeDuration = fullDuration / localDocItems.length;
+  const avgTimeRedirect = fullRedirectDuration / localDocItems.length;
+  const avgTimeResponse = fullResponseDuration / localDocItems.length;
+  const avgTransferSize = fullTransferSize / localDocItems.length;
 
   let biggestInitiator = { name: "-", value: 0 };
 
