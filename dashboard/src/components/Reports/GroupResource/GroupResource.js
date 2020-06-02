@@ -25,9 +25,14 @@ const ToggleOpt = ({ title, item }) => {
       </div>
       <Collapse open={open}>
         <div className="p-3 mt-3 border rounded">
-          {item.data.map((req) => (
-            <div>{req.iniType}</div>
-          ))}
+          <ShowMoreList
+            list={item.data.map((req) => (
+              <div>
+                {req.iniType}
+                <hr />
+              </div>
+            ))}
+          />
         </div>
       </Collapse>
     </>

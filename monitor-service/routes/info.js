@@ -12,13 +12,14 @@ const groupBy = function (xs, key) {
 };
 
 const removeMainContent = (item) => ({
-  _id: item.id,
-  userVisitUID: item.userVisitUID,
-  ip: item.ip,
-  name: item.name,
-  dateAdded: item.dateAdded,
-  entryType: item.entryType,
-  initiatorType: item.initiatorType,
+  // _id: item.id,
+  // userVisitUID: item.userVisitUID,
+  // ip: item.ip,
+  // name: item.name,
+  // dateAdded: item.dateAdded,
+  // entryType: item.entryType,
+  // initiatorType: item.initiatorType,
+  ...item,
 });
 
 const getAnalytics = (localDocItems) => {

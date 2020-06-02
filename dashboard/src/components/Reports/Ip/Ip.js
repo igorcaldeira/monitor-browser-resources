@@ -90,7 +90,7 @@ const Ip = () => {
             </Row>
             <Row className="pt-3">
               <Col>
-                <ShowRawList objectData={data} />
+                <ShowRawList objectData={data} count={1} />
               </Col>
             </Row>
           </>

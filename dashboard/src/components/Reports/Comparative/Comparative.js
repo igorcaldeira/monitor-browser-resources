@@ -10,7 +10,7 @@ function getId() {
 }
 
 const Comparative = () => {
-  const [reports, setReports] = useState(["1"]);
+  const [reports, setReports] = useState(["1", "2"]);
   return (
     <Container className="pt-4">
       <Container className="pt-4">
