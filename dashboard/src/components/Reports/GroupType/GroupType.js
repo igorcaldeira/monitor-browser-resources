@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Container, Row, Col, Card, CardBody } from "shards-react";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
+import { Container, CardHeader, Row, Col, Card, CardBody } from "shards-react";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import API from "utils/api";
 import Loading from "components/Core/Loading";
+import ShowRawList from "components/Core/ShowRawList";
 
 const GroupType = () => {
   const [loading, setLoading] = useState(false);
@@ -26,10 +27,12 @@ const GroupType = () => {
   const chartFormat =
     data &&
     !loading &&
-    Object.keys(data).map((iniType) => ({
-      iniType,
-      count: data[iniType].length,
-    }));
+    Object.keys(data)
+      .map((iniType) => ({
+        iniType,
+        count: data[iniType].length,
+      }))
+      .sort((a, b) => b.count - a.count);
 
   return (
     <Loading isLoading={loading}>
@@ -44,29 +47,39 @@ const GroupType = () => {
             <Row className="pt-3">
               <Col>
                 <Card className="mb-3 mt-3">
-                  <Row className="pt-3">
-                    <CardBody>
-                      <BarChart
-                        width={500}
-                        height={300}
-                        data={chartFormat}
-                        margin={{
-                          top: 5,
-                          right: 30,
-                          left: 20,
-                          bottom: 5,
-                        }}
-                      >
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="iniType" />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend />
-                        <Bar dataKey="count" fill="#17C671" />
-                      </BarChart>
-                    </CardBody>
-                  </Row>
+                  <CardHeader>
+                    <h5 style={{ marginBottom: "0px" }}>Resources used count by type</h5>
+                  </CardHeader>
+                  <CardBody>
+                    <div style={{ marginTop: "30px" }}>
+                      <ResponsiveContainer width="100%" height={300}>
+                        <BarChart
+                          width={500}
+                          height={300}
+                          data={chartFormat}
+                          margin={{
+                            top: 5,
+                            right: 30,
+                            left: 20,
+                            bottom: 5,
+                          }}
+                        >
+                          <CartesianGrid strokeDasharray="3 3" />
+                          <XAxis dataKey="iniType" />
+                          <YAxis />
+                          <Tooltip />
+                          <Legend />
+                          <Bar dataKey="count" fill="#17C671" />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </CardBody>
                 </Card>
+              </Col>
+            </Row>
+            <Row className="pt-3">
+              <Col>
+                <ShowRawList objectData={data} />
               </Col>
             </Row>
           </>

@@ -15,7 +15,11 @@ const ShowMoreList = ({ list, count = 5 }) => {
           changeCount(showUntil + moreToShow);
         }}
       >
-        {moreToShow > 0 && <center className="show-more-link">show {moreToShow} more items</center>}
+        {moreToShow > 0 && (
+          <center className="show-more-link">
+            show {moreToShow} more of {list.length} items
+          </center>
+        )}
       </div>
     </>
   );

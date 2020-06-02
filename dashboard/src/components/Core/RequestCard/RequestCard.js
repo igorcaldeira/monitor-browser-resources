@@ -3,7 +3,7 @@ import { Card, CardHeader, CardBody, CardFooter, Progress, Badge } from "shards-
 import { typeTheme, paramsTips, formatTime } from "utils/lib";
 import "./RequestCard.css";
 
-const RequestCard = ({ request: r }) => {
+const RequestCard = ({ request: r, resumed }) => {
   const proportionByTotal = (total, value) => (100 * value) / total;
 
   const timelineMath = [
@@ -29,15 +29,20 @@ const RequestCard = ({ request: r }) => {
             </div>
           ) : null
         )}
-        <br />
-        <h5>Timeline</h5>
-        <Progress multi>
-          {timelineMath.map((item, indexKey) => (
-            <Progress bar value={proportionByTotal(r.duration, item.magicMath(r))} theme={indexKey % 2 === 1 ? "" : "success"}>
-              {item.name}
+        {!resumed && (
+          <>
+            {" "}
+            <br />
+            <h5>Timeline</h5>
+            <Progress multi>
+              {timelineMath.map((item, indexKey) => (
+                <Progress bar value={proportionByTotal(r.duration, item.magicMath(r))} theme={indexKey % 2 === 1 ? "" : "success"}>
+                  {item.name}
+                </Progress>
+              ))}
             </Progress>
-          ))}
-        </Progress>
+          </>
+        )}
       </CardBody>
       <CardFooter>
         Report created at&nbsp;&nbsp;<Badge theme="light">{new Date(r.dateAdded).toLocaleString()}</Badge>

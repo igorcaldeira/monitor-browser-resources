@@ -1,10 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { Container, Row, Col, Card, CardBody, CardHeader, Form, FormInput, FormGroup, FormSelect, Button } from "shards-react";
-import API from "utils/api";
-import Loading from "components/Core/Loading";
-import RequestCard from "components/Core/RequestCard";
-import ShowMoreList from "components/Core/ShowMoreList";
-import ReportModule from "./ReportModule";
+import React, { useState } from "react";
+import { Container, Button } from "shards-react";
+import ReportGroup from "./ReportGroup";
 import "./Comparative.css";
 
 function getId() {
@@ -33,7 +29,7 @@ const Comparative = () => {
           <>
             <hr />
             <h5>Report {indexKey + 1}</h5>
-            <ReportModule key={validUID} />
+            <ReportGroup key={validUID} />
           </>
         ))}
       </Container>

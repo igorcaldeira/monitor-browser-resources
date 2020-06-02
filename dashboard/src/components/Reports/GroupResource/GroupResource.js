@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container, Row, Col, Card, CardBody, ListGroup, ListGroupItem, Collapse, Badge } from "shards-react";
+import { Container, Row, Col, Card, CardHeader, CardBody, ListGroup, ListGroupItem, Collapse, Badge } from "shards-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import API from "utils/api";
 import Loading from "components/Core/Loading";
@@ -92,87 +92,87 @@ const GroupResource = () => {
             <Row className="pt-3">
               <Col>
                 <Card className="mb-3 mt-3">
-                  <Row className="pt-3">
-                    <CardBody>
-                      <h4>Most called hosts</h4>
-                      <ListGroup>
-                        <ShowMoreList
-                          list={topHosts.map((item) => {
-                            return (
-                              <ListGroupItem>
-                                <ToggleOpt item={item} />
-                              </ListGroupItem>
-                            );
-                          })}
-                        />
-                      </ListGroup>
-                      <div style={{ marginTop: "70px" }}>
-                        <ResponsiveContainer height={400}>
-                          <BarChart
-                            layout="horizontal"
-                            data={topHosts}
-                            margin={{
-                              top: 5,
-                              right: 30,
-                              left: 20,
-                              bottom: 5,
-                            }}
-                          >
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="hostName" />
-                            <YAxis />
-                            <Tooltip />
-                            <Legend />
-                            <Bar dataKey="count" fill="#17C671" />
-                          </BarChart>
-                        </ResponsiveContainer>
-                      </div>
-                    </CardBody>
-                  </Row>
+                  <CardHeader>
+                    <h5 style={{ marginBottom: "0px" }}>Most called hosts</h5>
+                  </CardHeader>
+                  <CardBody>
+                    <ListGroup>
+                      <ShowMoreList
+                        list={topHosts.map((item) => {
+                          return (
+                            <ListGroupItem>
+                              <ToggleOpt item={item} />
+                            </ListGroupItem>
+                          );
+                        })}
+                      />
+                    </ListGroup>
+                    <div style={{ marginTop: "70px" }}>
+                      <ResponsiveContainer width="100%" height={400}>
+                        <BarChart
+                          layout="horizontal"
+                          data={topHosts}
+                          margin={{
+                            top: 5,
+                            right: 30,
+                            left: 20,
+                            bottom: 5,
+                          }}
+                        >
+                          <CartesianGrid strokeDasharray="3 3" />
+                          <XAxis dataKey="hostName" />
+                          <YAxis />
+                          <Tooltip />
+                          <Legend />
+                          <Bar dataKey="count" fill="#17C671" />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </CardBody>
                 </Card>
               </Col>
             </Row>
             <Row className="pt-3">
               <Col>
                 <Card className="mb-3 mt-3">
-                  <Row className="pt-3">
-                    <CardBody>
-                      <h4>Most called resources</h4>
-                      <ListGroup>
-                        <ShowMoreList
-                          list={topResources.map((item) => (
-                            <ListGroupItem>
-                              <Badge>{item.count}</Badge>
-                              <div style={{ display: "inline-block", paddingLeft: "10px" }}>
-                                {item.iniType} - {item.url.host}
-                              </div>
-                            </ListGroupItem>
-                          ))}
-                        />
-                      </ListGroup>
-                      <div style={{ marginTop: "70px" }}>
-                        <ResponsiveContainer height={400}>
-                          <BarChart
-                            layout="horizontal"
-                            data={topResources}
-                            margin={{
-                              top: 5,
-                              right: 30,
-                              left: 20,
-                              bottom: 5,
-                            }}
-                          >
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="iniType" />
-                            <YAxis />
-                            <Tooltip />
-                            <Legend />
-                            <Bar dataKey="count" fill="#17C671" />
-                          </BarChart>
-                        </ResponsiveContainer>
-                      </div>
-                    </CardBody>
-                  </Row>
+                  <CardHeader>
+                    <h5 style={{ marginBottom: "0px" }}>Most called resources</h5>
+                  </CardHeader>
+                  <CardBody>
+                    <ListGroup>
+                      <ShowMoreList
+                        list={topResources.map((item) => (
+                          <ListGroupItem>
+                            <Badge>{item.count}</Badge>
+                            <div style={{ display: "inline-block", paddingLeft: "10px" }}>
+                              {item.iniType} - {item.url.host}
+                            </div>
+                          </ListGroupItem>
+                        ))}
+                      />
+                    </ListGroup>
+                    <div style={{ marginTop: "70px" }}>
+                      <ResponsiveContainer height={400}>
+                        <BarChart
+                          layout="horizontal"
+                          data={topResources.slice(0, 40)}
+                          margin={{
+                            top: 5,
+                            right: 30,
+                            left: 20,
+                            bottom: 5,
+                          }}
+                        >
+                          <CartesianGrid strokeDasharray="3 3" />
+                          <XAxis dataKey="iniType" />
+                          <YAxis />
+                          <Tooltip />
+                          <Legend />
+                          <Bar dataKey="count" fill="#17C671" />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </CardBody>
                 </Card>
               </Col>
             </Row>

@@ -1,58 +1,54 @@
-import React, { useEffect, useState } from "react";
-import { Container, Row, Col, Card, CardBody, CardHeader, Form, FormInput, FormGroup, FormSelect, Button } from "shards-react";
-import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from "recharts";
-import API from "utils/api";
+import React, { useState } from "react";
+import { Row, Col, Card, CardTitle, CardBody, Form, FormInput, FormGroup, FormSelect, Button } from "shards-react";
+import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, PieChart, Pie, Sector } from "recharts";
 import Loading from "components/Core/Loading";
-import RequestCard from "components/Core/RequestCard";
-import ShowMoreList from "components/Core/ShowMoreList";
-
-const asdasdasd = [
-  {
-    subject: "Math",
-    A: 120,
-    B: 110,
-    fullMark: 150,
-  },
-  {
-    subject: "Chinese",
-    A: 98,
-    B: 130,
-    fullMark: 150,
-  },
-  {
-    subject: "English",
-    A: 86,
-    B: 130,
-    fullMark: 150,
-  },
-  {
-    subject: "Geography",
-    A: 99,
-    B: 100,
-    fullMark: 150,
-  },
-  {
-    subject: "Physics",
-    A: 85,
-    B: 90,
-    fullMark: 150,
-  },
-  {
-    subject: "History",
-    A: 65,
-    B: 85,
-    fullMark: 150,
-  },
-];
+import ReportModule from "components/Core/ReportModule";
+import API from "utils/api";
+import { formatDuration, formatBytes } from "utils/lib";
 
 const initialValue = {
   name: undefined,
   initiatorType: undefined,
 };
 
-const ReportModule = () => {
+const renderActiveShape = (props) => {
+  const RADIAN = Math.PI / 180;
+  const { cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill, payload, percent, value } = props;
+  const sin = Math.sin(-RADIAN * midAngle);
+  const cos = Math.cos(-RADIAN * midAngle);
+  const sx = cx + (outerRadius + 10) * cos;
+  const sy = cy + (outerRadius + 10) * sin;
+  const mx = cx + (outerRadius + 30) * cos;
+  const my = cy + (outerRadius + 30) * sin;
+  const ex = mx + (cos >= 0 ? 1 : -1) * 22;
+  const ey = my;
+  const textAnchor = cos >= 0 ? "start" : "end";
+
+  return (
+    <g>
+      <text x={cx} y={cy} dy={8} textAnchor="middle" fill={"black"}>
+        {payload.name}
+      </text>
+      <Sector cx={cx} cy={cy} innerRadius={innerRadius} outerRadius={outerRadius} startAngle={startAngle} endAngle={endAngle} fill={fill} />
+      <Sector cx={cx} cy={cy} startAngle={startAngle} endAngle={endAngle} innerRadius={outerRadius + 6} outerRadius={outerRadius + 10} fill={fill} />
+      <path d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`} stroke={fill} fill="none" />
+      <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none" />
+      <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} textAnchor={textAnchor} fill="#333">{`${value} Times`}</text>
+      <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} dy={18} textAnchor={textAnchor} fill="#999">
+        {`(Rate ${(percent * 100).toFixed(2)}%)`}
+      </text>
+    </g>
+  );
+};
+
+const capitalize = (s) => {
+  if (typeof s !== "string") return "";
+  return s.charAt(0).toUpperCase() + s.slice(1);
+};
+
+const ReportGroup = ({ shouldTransformData }) => {
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState({});
   const [filter, changeFilter] = useState(initialValue);
 
   const handleChange = (event, property) => {
@@ -66,7 +62,7 @@ const ReportModule = () => {
         setData(response.data);
       })
       .catch(() => {
-        setData([]);
+        setData({});
         setLoading(false);
       })
       .finally(() => {
@@ -105,6 +101,7 @@ const ReportModule = () => {
             <FormGroup>
               <label htmlFor="#name">Resource name</label>
               <FormInput
+                value={filter.name}
                 type="text"
                 id="#name"
                 placeholder="..."
@@ -122,6 +119,7 @@ const ReportModule = () => {
               <FormInput
                 type="date"
                 id="#dateStart"
+                value={filter.dateStart}
                 placeholder="..."
                 onChange={(e) => {
                   handleChange(e, "dateStart");
@@ -135,6 +133,7 @@ const ReportModule = () => {
               <FormInput
                 type="date"
                 id="#dateEnd"
+                value={filter.dateEnd}
                 placeholder="..."
                 onChange={(e) => {
                   handleChange(e, "dateEnd");
@@ -157,7 +156,9 @@ const ReportModule = () => {
                 <Button
                   outline
                   onClick={() => {
-                    changeFilter(initialValue);
+                    changeFilter({
+                      name: "",
+                    });
                   }}
                 >
                   Reset
@@ -167,40 +168,11 @@ const ReportModule = () => {
           </Col>
         </Row>
         <Row className="pt-3">
-          <Col>
-            <ResponsiveContainer width={300} height={300}>
-              <RadarChart cx={150} cy={130} outerRadius={100} data={asdasdasd}>
-                <PolarGrid />
-                <PolarAngleAxis dataKey="subject" />
-                <PolarRadiusAxis />
-                <Radar name="Mike" dataKey="A" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
-              </RadarChart>
-            </ResponsiveContainer>
-          </Col>
-          <Col>
-            <ResponsiveContainer width={300} height={300}>
-              <RadarChart cx={150} cy={130} outerRadius={100} data={asdasdasd}>
-                <PolarGrid />
-                <PolarAngleAxis dataKey="subject" />
-                <PolarRadiusAxis />
-                <Radar name="Mike" dataKey="A" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
-              </RadarChart>
-            </ResponsiveContainer>
-          </Col>
-          <Col>
-            <ResponsiveContainer width={300} height={300}>
-              <RadarChart cx={150} cy={130} outerRadius={100} data={asdasdasd}>
-                <PolarGrid />
-                <PolarAngleAxis dataKey="subject" />
-                <PolarRadiusAxis />
-                <Radar name="Mike" dataKey="A" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
-              </RadarChart>
-            </ResponsiveContainer>
-          </Col>
+          <ReportModule data={data} shouldTransformData={false} />
         </Row>
       </Form>
     </Loading>
   );
 };
 
-export default ReportModule;
+export default ReportGroup;
