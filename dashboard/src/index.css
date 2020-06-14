@@ -13,3 +13,8 @@ code {
 .recharts-surface {
   overflow: visible;
 }
+
+.bigtext text{
+  font-size: 15px;
+  font-weight: lighter;
+}

@@ -272,17 +272,17 @@ const Geolocation = () => {
 
   return (
     <Loading isLoading={loading}>
-      <Container className="pt-4">
+      <Container className='pt-4'>
         {data && !loading && (
           <>
-            <Row className="pt-3">
+            <Row className='pt-3'>
               <Col>
                 <h3>Geolocation</h3>
               </Col>
             </Row>
-            <Row className="pt-3">
+            <Row className='pt-3'>
               <Col>
-                <Card className="mb-3 mt-3">
+                <Card className='mb-3 mt-3'>
                   <CardHeader>
                     <h5 style={{ marginBottom: "0px" }}>Location subsections</h5>
                   </CardHeader>
@@ -290,16 +290,16 @@ const Geolocation = () => {
                 </Card>
               </Col>
             </Row>
-            <Row className="pt-3">
+            <Row className='pt-3'>
               <Col>
-                <Card className="mb-3 mt-3">
+                <Card className='mb-3 mt-3'>
                   <CardHeader>
                     <h5 style={{ marginBottom: "0px" }}>Cities visualization</h5>
                   </CardHeader>
                   <CardBody>
                     <Col>
-                      <div style={{ marginTop: "30px" }}>
-                        <ResponsiveContainer width="100%" height={300}>
+                      <div style={{ marginTop: "30px", marginBottom: "60px" }} className='bigtext'>
+                        <ResponsiveContainer width='100%' height={300}>
                           <BarChart
                             data={barChartData}
                             margin={{
@@ -307,13 +307,12 @@ const Geolocation = () => {
                               right: 30,
                               left: 20,
                               bottom: 90,
-                            }}
-                          >
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="Cidade" tick={<CustomizedAxisTick />} interval={0} />
+                            }}>
+                            <CartesianGrid strokeDasharray='3 3' />
+                            <XAxis dataKey='Cidade' tick={<CustomizedAxisTick />} interval={0} />
                             <YAxis />
                             <Tooltip />
-                            <Bar dataKey="Recursos" fill="#FFB400" />
+                            <Bar dataKey='Recursos' fill='#FFB400' />
                           </BarChart>
                         </ResponsiveContainer>
                       </div>

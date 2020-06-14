@@ -53,7 +53,7 @@ function App() {
       </div>
         {repos.map((repo) => <div style={{
           marginBottom: '20px',
-          borderBottom: 'solid red 3px',
+          borderBottom: 'solid white 3px',
           height: '300px',
           overflow: 'auto',
           width: '80%',
@@ -97,7 +97,7 @@ function App() {
         {items.map((repo) => <div style={{
           display: 'inline-block',
           marginBottom: '20px',
-          borderBottom: 'solid red 3px',
+          borderBottom: 'solid white 3px',
           height: '400px',
           overflow: 'auto',
           width: '29%',
